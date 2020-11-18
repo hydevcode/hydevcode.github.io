@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search> 
+  
+  
+    
+    <entry>
+      <title>2020-7月-蓝桥杯合并检测-C</title>
+      <link href="posts/520521/"/>
+      <url>posts/520521/</url>
+      
+        <content type="html"><![CDATA[<blockquote><p><strong>本题总分：10 分<br>问题：<br>新冠疫情由新冠病毒引起，最近在 A 国蔓延，为了尽快控制疫情，A 国准 备给大量民众进病毒核酸检测。<br>然而，用于检测的试剂盒紧缺。 为了解决这一困难，科学家想了一个办法：合并检测。即将从多个人（k 个）采集的标本放到同一个试剂盒中进行检测。如果结果为阴性，则说明这 k 个人都是阴性，用一个试剂盒完成了 k 个人的检测。如果结果为阳性，则说明 至少有一个人为阳性，需要将这 k 个人的样本全部重新独立检测（从理论上看， 如果检测前 k−1 个人都是阴性可以推断出第 k 个人是阳性，但是在实际操作中 不会利用此推断，而是将 k 个人独立检测），加上最开始的合并检测，一共使用 了 k + 1 个试剂盒完成了 k 个人的检测。<br>A 国估计被测的民众的感染率大概是 1%，呈均匀分布。请问 k 取多少能最节省试剂盒？</strong></p></blockquote><p>刚开始还以为k就是要检测的人数 (啊这，我太菜了)，后来看了下别人的思路才知道，原来是将要检测的人按k分成几波人来检测,留个笔记</p><p>但是这道题也没说总人数是多少，看来只能将总人数设为m了，再用m/k来看看分成了几波，也就是需要多少大家一起用的试剂盒。不过有可能有余数，也就是有几个人没能凑成k个人，那需要多一个试剂盒了</p><p>再看看有多少感染的群众，1%那就是0.01了，0.01<em>m就是感染的人数了，<br>如果m/k有余的情况，额外的试剂盒还需要加1<br>0.01</em>m*k就是感染的人每一个都需要试剂盒的总试剂盒数 ,因为感染是均匀分布的，所以感染者都是平均待在每一波里面的</p><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;Stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   <span class="keyword">double</span> m=<span class="number">3450</span>;<span class="comment">//假设人数</span></span><br><span class="line">    <span class="keyword">double</span> min=<span class="number">9999999</span>;</span><br><span class="line">    <span class="keyword">double</span> k,sum,ans;</span><br><span class="line">    <span class="keyword">for</span>(k=<span class="number">1</span>;k&lt;=<span class="number">100</span>;k++)<span class="comment">//这里k为什么小于100呢，其实可以随便定，不怕电脑卡死就行，可以适当定高点看看有没有其他答案 </span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>((<span class="keyword">int</span>)m%(<span class="keyword">int</span>)k==<span class="number">0</span>)<span class="comment">//强行转换看看有没有余数，也就是看看有没有凑不出一波k的人群 </span></span><br><span class="line">            sum=m/k+<span class="number">0.01</span>*m*k;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            sum=m/k+<span class="number">0.01</span>*m*k+<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span>(sum&lt;min)<span class="comment">//所需的试剂盒数量比较取小的</span></span><br><span class="line">        &#123;</span><br><span class="line">            min=sum;</span><br><span class="line">            ans=k;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"%f\n"</span>,ans);</span><br><span class="line"><span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p><em>简化写法</em>：</p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   <span class="keyword">double</span> m=<span class="number">4537</span>;<span class="comment">//假设人数</span></span><br><span class="line">    <span class="keyword">double</span> <span class="built_in">min</span>=<span class="number">9999999</span>;</span><br><span class="line">    <span class="keyword">double</span> k,sum,ans;</span><br><span class="line">    <span class="keyword">for</span>(k=<span class="number">1</span>;k&lt;=<span class="number">100</span>;k++)<span class="comment">//这里k为什么小于100呢，其实可以随便定，不怕电脑卡死就行，可以适当定高点看看有没有其他答案 </span></span><br><span class="line">    &#123;</span><br><span class="line">        sum=(m-k)/k+<span class="number">0.01</span>*m*k+<span class="number">1</span>;<span class="comment">//小技巧：这样写可以省去多一个if </span></span><br><span class="line">        <span class="keyword">if</span>(sum&lt;<span class="built_in">min</span>)<span class="comment">//所需的试剂盒数量比较取小的</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">min</span>=sum;</span><br><span class="line">            ans=k;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"%d\n"</span>,(<span class="keyword">int</span>)ans);</span><br><span class="line"><span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>c/c++</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 蓝桥杯 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Hello World</title>
+      <link href="posts/520520/"/>
+      <url>posts/520520/</url>
+      
+        <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> blog </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 总结 </tag>
+            
+            <tag> blog </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+  
+  
+</search>
