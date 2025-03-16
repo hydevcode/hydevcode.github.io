@@ -1,0 +1,213 @@
+<!doctype html><html lang=zh-cn dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content=" 😀 由于需要在PR上用bot发送评论，所以可能需要用到pull_request_target,但是官方文档提示该触发条件有安全风险,于是研究下并做个笔记 触发工作流的事件 - GitHub 文档\n在 GitHub Actions 中，pull_request 和 pull_request_target 是两种处理 Pull Request (PR) 的触发器,以下是我的理解介绍以及对比：\n📝 什么是pull_request? 当 PR 被创建、更新（新提交）或 重新打开 时触发工作流 专为 处理 PR 贡献者的代码 设计 特性 说明 代码环境 使用 PR 分支的代码（即贡献者的代码） 权限 GITHUB_TOKEN 默认只有 读权限 Secrets 无法访问仓库的加密 secrets 目标分支 无法直接访问目标分支（如 main）的最新代码 使用示例：\n1 2 3 4 5 6 7 8 9 10 11 12 13 on: #触发条件设置↓ pull_request: branches: [ main ] permissions: contents: read # 显式声明最低权限 jobs: test: runs-on: ubuntu-latest steps: - uses: actions/checkout@v4 # 自动签出 PR 代码 📝 什么是pull_request_target? 专门用于 维护者审核 PR 时 需要 高权限操作 的场景 特性 说明 代码环境 默认使用 目标分支的代码（如 main 分支），而非 PR 代码 权限 GITHUB_TOKEN 默认拥有 写权限（可修改仓库） Secrets 可以访问仓库的加密 secrets 目标分支 直接基于目标分支的最新代码运行 可能的安全风险 "><title>Github Pull_request_target学习笔记</title>
+<link rel=canonical href=https://hydevcode.github.io/p/github-pull_request_target%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/><link rel=stylesheet href=/scss/style.min.0a4b4689924ba3eefd1ec09db8a20fa6294521dd15f810a47aca206f3cf2734b.css><meta property='og:title' content="Github Pull_request_target学习笔记"><meta property='og:description' content=" 😀 由于需要在PR上用bot发送评论，所以可能需要用到pull_request_target,但是官方文档提示该触发条件有安全风险,于是研究下并做个笔记 触发工作流的事件 - GitHub 文档\n在 GitHub Actions 中，pull_request 和 pull_request_target 是两种处理 Pull Request (PR) 的触发器,以下是我的理解介绍以及对比：\n📝 什么是pull_request? 当 PR 被创建、更新（新提交）或 重新打开 时触发工作流 专为 处理 PR 贡献者的代码 设计 特性 说明 代码环境 使用 PR 分支的代码（即贡献者的代码） 权限 GITHUB_TOKEN 默认只有 读权限 Secrets 无法访问仓库的加密 secrets 目标分支 无法直接访问目标分支（如 main）的最新代码 使用示例：\n1 2 3 4 5 6 7 8 9 10 11 12 13 on: #触发条件设置↓ pull_request: branches: [ main ] permissions: contents: read # 显式声明最低权限 jobs: test: runs-on: ubuntu-latest steps: - uses: actions/checkout@v4 # 自动签出 PR 代码 📝 什么是pull_request_target? 专门用于 维护者审核 PR 时 需要 高权限操作 的场景 特性 说明 代码环境 默认使用 目标分支的代码（如 main 分支），而非 PR 代码 权限 GITHUB_TOKEN 默认拥有 写权限（可修改仓库） Secrets 可以访问仓库的加密 secrets 目标分支 直接基于目标分支的最新代码运行 可能的安全风险 "><meta property='og:url' content='https://hydevcode.github.io/p/github-pull_request_target%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/'><meta property='og:site_name' content='Hydevcode'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:published_time' content='2025-03-15T19:20:00+08:00'><meta property='article:modified_time' content='2025-03-15T19:20:00+08:00'><meta name=twitter:title content="Github Pull_request_target学习笔记"><meta name=twitter:description content=" 😀 由于需要在PR上用bot发送评论，所以可能需要用到pull_request_target,但是官方文档提示该触发条件有安全风险,于是研究下并做个笔记 触发工作流的事件 - GitHub 文档\n在 GitHub Actions 中，pull_request 和 pull_request_target 是两种处理 Pull Request (PR) 的触发器,以下是我的理解介绍以及对比：\n📝 什么是pull_request? 当 PR 被创建、更新（新提交）或 重新打开 时触发工作流 专为 处理 PR 贡献者的代码 设计 特性 说明 代码环境 使用 PR 分支的代码（即贡献者的代码） 权限 GITHUB_TOKEN 默认只有 读权限 Secrets 无法访问仓库的加密 secrets 目标分支 无法直接访问目标分支（如 main）的最新代码 使用示例：\n1 2 3 4 5 6 7 8 9 10 11 12 13 on: #触发条件设置↓ pull_request: branches: [ main ] permissions: contents: read # 显式声明最低权限 jobs: test: runs-on: ubuntu-latest steps: - uses: actions/checkout@v4 # 自动签出 PR 代码 📝 什么是pull_request_target? 专门用于 维护者审核 PR 时 需要 高权限操作 的场景 特性 说明 代码环境 默认使用 目标分支的代码（如 main 分支），而非 PR 代码 权限 GITHUB_TOKEN 默认拥有 写权限（可修改仓库） Secrets 可以访问仓库的加密 secrets 目标分支 直接基于目标分支的最新代码运行 可能的安全风险 "></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label=切换菜单>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/avatar_hu_33a4cdb3dc4a9f44.jpg width=300 height=300 class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🍥</span></figure><div class=site-meta><h1 class=site-name><a href=/>Hydevcode</a></h1><h2 class=site-description>记录脑海中的灵光一闪</h2></div></header><ol class=menu-social><li><a href=https://github.com/hydevcode target=_blank title=GitHub rel=me><svg class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li><li><a href=https://twitter.com target=_blank title=Twitter rel=me><svg class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M22 4.01c-1 .49-1.98.689-3 .99-1.121-1.265-2.783-1.335-4.38-.737S11.977 6.323 12 8v1c-3.245.083-6.135-1.395-8-4 0 0-4.182 7.433 4 11-1.872 1.247-3.739 2.088-6 2 3.308 1.803 6.913 2.423 10.034 1.517 3.58-1.04 6.522-3.723 7.651-7.742a13.84 13.84.0 00.497-3.753C20.18 7.773 21.692 5.25 22 4.009z"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=/><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>主页</span></a></li><li><a href=/%E5%85%B3%E4%BA%8E/><svg class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg>
+<span>关于</span></a></li><li><a href=/archives/><svg class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>存档</span></a></li><li><a href=/%E5%8F%82%E8%80%83/><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-book"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 19a9 9 0 019 0 9 9 0 019 0"/><path d="M3 6a9 9 0 019 0 9 9 0 019 0"/><path d="M3 6v13"/><path d="M12 6v13"/><path d="M21 6v13"/></svg>
+<span>参考</span></a></li><li><a href=/search/><svg class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>搜索</span></a></li><li><a href=/%E9%93%BE%E6%8E%A5/><svg class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg>
+<span>链接</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>暗色模式</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">目录</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#可能的安全风险>可能的安全风险</a><ol><li><a href=#比如>比如：</a></li></ol></li></ol></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><div class=article-title-wrapper><h2 class=article-title><a href=/p/github-pull_request_target%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/>Github Pull_request_target学习笔记</a></h2></div><footer class=article-time><div><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>2025年3月15日 19:20</time></div><div><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>阅读时长: 3 分钟</time></div></footer></div></header><nav class=breadcrumb aria-label=breadcrumbs><ol class=breadcrumb-list><li class=breadcrumb-item><a href=/>主页</a></li><li class=breadcrumb-separator>»</li><li class=breadcrumb-item><a href=/post/>文章列表</a></li><li class=breadcrumb-separator>»</li><li class="breadcrumb-item active"><a href=/p/github-pull_request_target%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/ aria-current=location>Github Pull_request_target学习笔记</a></li></ol></nav><section class="toc toc--inline article-content"><h2>目录</h2><div><nav id=TableOfContents><ol><li><a href=#可能的安全风险>可能的安全风险</a><ol><li><a href=#比如>比如：</a></li></ol></li></ol></nav></div></section><section class=article-content><aside>😀 由于需要在PR上用bot发送评论，所以可能需要用到pull_request_target,但是官方文档提示该触发条件有安全风险,于是研究下并做个笔记</aside><p><a class=link href=https://docs.github.com/zh/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#pull_request_target target=_blank rel=noopener>触发工作流的事件 - GitHub 文档</a></p><p>在 GitHub Actions 中，<code>pull_request</code> 和 <code>pull_request_target</code> 是两种处理 Pull Request (PR) 的触发器,以下是我的理解介绍以及对比：</p><h1 id=-什么是pull_request>📝 什么是pull_request?</h1><ul><li>当 <strong>PR 被创建</strong>、<strong>更新</strong>（新提交）或 <strong>重新打开</strong> 时触发工作流</li><li>专为 <strong>处理 PR 贡献者的代码</strong> 设计</li></ul><div class=table-wrapper><table><thead><tr><th>特性</th><th>说明</th></tr></thead><tbody><tr><td><strong>代码环境</strong></td><td>使用 <strong>PR 分支的代码</strong>（即贡献者的代码）</td></tr><tr><td><strong>权限</strong></td><td><code>GITHUB_TOKEN</code> 默认只有 <strong>读权限</strong></td></tr><tr><td><strong>Secrets</strong></td><td><strong>无法访问仓库的加密 secrets</strong></td></tr><tr><td><strong>目标分支</strong></td><td>无法直接访问目标分支（如 <code>main</code>）的最新代码</td></tr></tbody></table></div><p>使用示例：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>on:
+</span></span><span class=line><span class=cl>	<span class=c1>#触发条件设置↓</span>
+</span></span><span class=line><span class=cl>  pull_request:
+</span></span><span class=line><span class=cl>    branches: <span class=o>[</span> main <span class=o>]</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>permissions:
+</span></span><span class=line><span class=cl>  contents: <span class=nb>read</span>  <span class=c1># 显式声明最低权限</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>jobs:
+</span></span><span class=line><span class=cl>  test:
+</span></span><span class=line><span class=cl>    runs-on: ubuntu-latest
+</span></span><span class=line><span class=cl>    steps:
+</span></span><span class=line><span class=cl>      - uses: actions/checkout@v4  <span class=c1># 自动签出 PR 代码</span>
+</span></span></code></pre></td></tr></table></div></div><h1 id=-什么是pull_request_target>📝 什么是pull_request_target?</h1><ul><li>专门用于 <strong>维护者审核 PR 时</strong> 需要 <strong>高权限操作</strong> 的场景</li></ul><div class=table-wrapper><table><thead><tr><th>特性</th><th>说明</th></tr></thead><tbody><tr><td><strong>代码环境</strong></td><td>默认使用 <strong>目标分支的代码</strong>（如 <code>main</code> 分支），而非 PR 代码</td></tr><tr><td><strong>权限</strong></td><td><code>GITHUB_TOKEN</code> 默认拥有 <strong>写权限</strong>（可修改仓库）</td></tr><tr><td><strong>Secrets</strong></td><td><strong>可以访问仓库的加密 secrets</strong></td></tr><tr><td><strong>目标分支</strong></td><td>直接基于目标分支的最新代码运行</td></tr></tbody></table></div><h2 id=可能的安全风险>可能的安全风险</h2><p><img src=https://cdn.jsdelivr.net/gh/hydevcode/post/Git/Github_Pull_request_target%e5%ad%a6%e4%b9%a0%e7%ac%94%e8%ae%b0/images/Pasted%20image%2020250315192253.png alt></p><ul><li><p>来自官方文档https://docs.github.com/zh/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#pull_request_target</p><p>对于由 <code>pull_request_target</code> 事件触发的工作流，将授予 <code>GITHUB_TOKEN</code> 读/写存储库权限，除非指定了 <code>permissions</code>密钥并且工作流可以访问机密，即使从分支触发也是如此。 虽然工作流程在拉取请求的基础上下文中运行，但你应该确保不在此事件中检出、生成或运行来自拉取请求的不受信任代码。 此外，任何缓存都与基本分支共享相同的作用域。 为帮助防止缓存中毒，如果缓存内容可能已更改，则不应保存缓存。 有关详细信息，请参阅 GitHub Security Lab 网站上的“<a class=link href=https://securitylab.github.com/research/github-actions-preventing-pwn-requests target=_blank rel=noopener>保护 GitHub Actions 和工作流安全：阻止 pwn 请求</a>”。</p></li></ul><h3 id=比如>比如：</h3><p>由于 <code>pull_request_target</code> 默认使用的是 <code>main</code> 分支的代码，因此无法测试 PR 中修改的内容。为了解决这个问题，可以指定使用 PR 分支的代码，但这又会引发新的问题。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>steps:
+</span></span><span class=line><span class=cl>  - uses: actions/checkout@v4
+</span></span><span class=line><span class=cl>    with:
+</span></span><span class=line><span class=cl>      ref: ${{ github.event.pull_request.head.sha }}  # 显式签出 PR 代码
+</span></span></code></pre></td></tr></table></div></div><p>当前情况： • 工作流运行在高权限环境中（可访问敏感信息） • 但执行的是来自不可信 PR 的代码 • 触发的工作流仅在提交者的分叉仓库中运行 • 攻击者可能在 PR 代码中插入恶意 CI 脚本</p><p>安全风险主要源自于 <code>pull_request_target</code> 下的工作流，因为该工作流具有读取 secrets 和写入 GITHUB_TOKEN 的权限。因此，在编写 YAML 文件时需要特别注意。</p><p>在网上搜索到的一些解决办法可以有效提高 GitHub Actions 的安全性，具体措施如下：</p><ol><li><strong>禁用凭证持久化 (persist-credentials: false)</strong>：当使用 <code>actions/checkout</code> 动作时，默认情况下，GitHub 会将 GITHUB_TOKEN 写入本地的 Git 配置文件（存储在 <code>.git/config</code> 中）。这意味着后续的所有 Git 操作（如 <code>push</code> 或 <code>pull</code>）都会自动使用这个令牌进行身份验证。然而，为了增强安全性并避免潜在的风险，可以通过设置 <code>persist-credentials: false</code> 来主动删除这些凭证信息。这一步骤确保了即使代码库中存在敏感操作，也不会因为误用或泄露令牌而引发安全问题。</li><li><strong>最小化权限配置</strong>：在 GitHub Actions 的工作流文件中，可以使用 <code>permissions</code> 块来显式声明每个步骤所需的权限。通过这种方式，可以确保每个作业只拥有完成任务所必需的最低权限。例如，如果某个作业只需要读取仓库内容，则不应授予其写入权限。这种做法不仅减少了不必要的权限暴露，还降低了因权限滥用而导致的安全风险。</li><li><strong>隔离敏感操作</strong>：为了进一步提升安全性，建议将签出代码的操作与任何涉及写入的操作分离到不同的作业（job）中。这样做可以有效防止在同一环境中同时执行读取和写入操作，从而减少意外修改或恶意攻击的可能性。通过将不同类型的任务分隔开，可以更好地控制和监控每个作业的行为，确保整个工作流的安全性和稳定性。</li></ol><p>通过以上这些方法，不仅可以提高 GitHub Actions 的安全性，还能帮助开发者更清晰地管理和控制各个作业之间的权限和操作，从而构建更加健壮和可靠的自动化流程。</p><h1 id=workflow_run>WorkFlow_Run</h1><p>在官方的一篇文章中，官方提供了一种解决办法,而且给出的示例也刚好符合实现在PR发送评论的需求</p><ul><li><p><a class=link href=https://securitylab.github.com/resources/github-actions-preventing-pwn-requests/ target=_blank rel=noopener>https://securitylab.github.com/resources/github-actions-preventing-pwn-requests/</a></p><p>与<code>pull_request_target</code>一起，引入了一个新的触发器<code>workflow_run</code>，以支持需要构建不受信任的代码并且还需要写入权限来更新 PR（例如代码覆盖率结果或其他测试结果）的方案。要以安全的方式执行此作，必须通过 <code>pull_request</code> 触发器处理不受信任的代码，以便将其隔离在非特权环境中。然后，处理 PR 的工作流应将任何结果（如代码覆盖率或失败/通过的测试）存储在构件中并退出。然后，以下工作流程从 <code>workflow_run</code> 开始，在该位置被授予对目标存储库的写入权限和对存储库密钥的访问权限，以便它可以下载项目并对存储库进行任何必要的修改，或与需要存储库密钥（例如 API 令牌）的第三方服务交互。</p></li></ul><p>这里用的是官方的一个示例，其中分别有两个工作流，关键注意这两个工作流的触发事件一个是<code>pull_request</code>一个是<code>workflow_run</code></p><p>当贡献者提交PR时，会触发相应的CI流程。由于<code>Receive PR</code>工作流使用的是<code>pull_request</code>事件，默认情况下无法访问机密信息且不具备写入权限。该工作流运行完毕后，会将处理结果及PR编号存储在构件中。随后，<code>workflow_run</code>检测到<code>Receive PR</code>工作流已结束，于是触发该工作流并开始执行其定义的任务。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>name: Receive PR
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># read-only repo token</span>
+</span></span><span class=line><span class=cl><span class=c1># no access to secrets</span>
+</span></span><span class=line><span class=cl>on:
+</span></span><span class=line><span class=cl>  pull_request:
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>jobs:
+</span></span><span class=line><span class=cl>  build:
+</span></span><span class=line><span class=cl>    runs-on: ubuntu-latest
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    steps:        
+</span></span><span class=line><span class=cl>      - uses: actions/checkout@v2
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>      <span class=c1># imitation of a build process</span>
+</span></span><span class=line><span class=cl>      - name: Build
+</span></span><span class=line><span class=cl>        run: /bin/bash ./build.sh
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>      - name: Save PR number
+</span></span><span class=line><span class=cl>        run: <span class=p>|</span>
+</span></span><span class=line><span class=cl>          mkdir -p ./pr
+</span></span><span class=line><span class=cl>          <span class=nb>echo</span> <span class=si>${</span><span class=p>{ github.event.number </span><span class=si>}</span><span class=o>}</span> &gt; ./pr/NR
+</span></span><span class=line><span class=cl>      - uses: actions/upload-artifact@v2
+</span></span><span class=line><span class=cl>        with:
+</span></span><span class=line><span class=cl>          name: pr
+</span></span><span class=line><span class=cl>          path: pr/
+</span></span></code></pre></td></tr></table></div></div><p><code>Comment on the pull request</code>工作流将<code>Receive PR</code>的构件下载回来，然后根据PR号对相应的PR发送评论</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>name: Comment on the pull request
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># read-write repo token</span>
+</span></span><span class=line><span class=cl><span class=c1># access to secrets</span>
+</span></span><span class=line><span class=cl>on:
+</span></span><span class=line><span class=cl>  workflow_run:
+</span></span><span class=line><span class=cl>    workflows: <span class=o>[</span><span class=s2>&#34;Receive PR&#34;</span><span class=o>]</span>
+</span></span><span class=line><span class=cl>    types:
+</span></span><span class=line><span class=cl>      - completed
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>jobs:
+</span></span><span class=line><span class=cl>  upload:
+</span></span><span class=line><span class=cl>    runs-on: ubuntu-latest
+</span></span><span class=line><span class=cl>    <span class=k>if</span>: &gt;
+</span></span><span class=line><span class=cl>      github.event.workflow_run.event <span class=o>==</span> <span class=s1>&#39;pull_request&#39;</span> <span class=o>&amp;&amp;</span>
+</span></span><span class=line><span class=cl>      github.event.workflow_run.conclusion <span class=o>==</span> <span class=s1>&#39;success&#39;</span>
+</span></span><span class=line><span class=cl>    steps:
+</span></span><span class=line><span class=cl>      - name: <span class=s1>&#39;Download artifact&#39;</span>
+</span></span><span class=line><span class=cl>        uses: actions/github-script@v3.1.0
+</span></span><span class=line><span class=cl>        with:
+</span></span><span class=line><span class=cl>          script: <span class=p>|</span>
+</span></span><span class=line><span class=cl>            var <span class=nv>artifacts</span> <span class=o>=</span> await github.actions.listWorkflowRunArtifacts<span class=o>({</span>
+</span></span><span class=line><span class=cl>               owner: context.repo.owner,
+</span></span><span class=line><span class=cl>               repo: context.repo.repo,
+</span></span><span class=line><span class=cl>               run_id: <span class=si>${</span><span class=p>{github.event.workflow_run.id </span><span class=si>}</span><span class=o>}</span>,
+</span></span><span class=line><span class=cl>            <span class=o>})</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            var <span class=nv>matchArtifact</span> <span class=o>=</span> artifacts.data.artifacts.filter<span class=o>((</span>artifact<span class=o>)</span> <span class=o>=</span>&gt; <span class=o>{</span>
+</span></span><span class=line><span class=cl>              <span class=k>return</span> artifact.name <span class=o>==</span> <span class=s2>&#34;pr&#34;</span>
+</span></span><span class=line><span class=cl>            <span class=o>})[</span>0<span class=o>]</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            var <span class=nv>download</span> <span class=o>=</span> await github.actions.downloadArtifact<span class=o>({</span>
+</span></span><span class=line><span class=cl>               owner: context.repo.owner,
+</span></span><span class=line><span class=cl>               repo: context.repo.repo,
+</span></span><span class=line><span class=cl>               artifact_id: matchArtifact.id,
+</span></span><span class=line><span class=cl>               archive_format: <span class=s1>&#39;zip&#39;</span>,
+</span></span><span class=line><span class=cl>            <span class=o>})</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            var <span class=nv>fs</span> <span class=o>=</span> require<span class=o>(</span><span class=s1>&#39;fs&#39;</span><span class=o>)</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            fs.writeFileSync<span class=o>(</span><span class=s1>&#39;${{github.workspace}}/pr.zip&#39;</span>, Buffer.from<span class=o>(</span>download.data<span class=o>))</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>      - run: unzip pr.zip
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>      - name: <span class=s1>&#39;Comment on PR&#39;</span>
+</span></span><span class=line><span class=cl>        uses: actions/github-script@v3
+</span></span><span class=line><span class=cl>        with:
+</span></span><span class=line><span class=cl>          github-token: <span class=si>${</span><span class=p>{ secrets.GITHUB_TOKEN </span><span class=si>}</span><span class=o>}</span>
+</span></span><span class=line><span class=cl>          script: <span class=p>|</span>
+</span></span><span class=line><span class=cl>            var <span class=nv>fs</span> <span class=o>=</span> require<span class=o>(</span><span class=s1>&#39;fs&#39;</span><span class=o>)</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            var <span class=nv>issue_number</span> <span class=o>=</span> Number<span class=o>(</span>fs.readFileSync<span class=o>(</span><span class=s1>&#39;./NR&#39;</span><span class=o>))</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            await github.issues.createComment<span class=o>({</span>
+</span></span><span class=line><span class=cl>              owner: context.repo.owner,
+</span></span><span class=line><span class=cl>              repo: context.repo.repo,
+</span></span><span class=line><span class=cl>              issue_number: issue_number,
+</span></span><span class=line><span class=cl>              body: <span class=s1>&#39;Everything is OK. Thank you for the PR!&#39;</span>
+</span></span><span class=line><span class=cl>            <span class=o>})</span><span class=p>;</span>
+</span></span></code></pre></td></tr></table></div></div><aside>💡<p>有关题目或文章的问题，欢迎您在底部评论区留言，一起交流~</p></aside></section><footer class=article-footer><section class=article-copyright><svg class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section></footer></article><div class=disqus-container><div id=disqus_thread></div><script>window.disqus_config=function(){},function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById("disqus_thread").innerHTML="Disqus comments not available by default when the website is previewed locally.";return}var t=document,e=t.createElement("script");e.async=!0,e.src="//hugo-theme-stack.disqus.com/embed.js",e.setAttribute("data-timestamp",+new Date),(t.head||t.body).appendChild(e)}()</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{typeof DISQUS=="object"&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><section class=running-time>本博客已稳定运行
+<span id=runningdays class=running-days></span></section><section class=copyright>&copy;
+2025 Hydevcode All rights reserved. 禁止转载。如需引用，请注明文章链接。</section><section class=totalcount>发表了2篇文章 ·
+总计0.54k字</section><section class=powerby>使用 <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> 构建<br>主题 <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.30.0>Stack</a></b> 由 <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a> 设计</section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script><script>let s1="2025-3-15";s1=new Date(s1.replace(/-/g,"/"));let s2=new Date,diffInMilliseconds=s2.getTime()-s1.getTime(),totalDays=Math.floor(diffInMilliseconds/(1e3*60*60*24)),years=s2.getFullYear()-s1.getFullYear(),months=s2.getMonth()-s1.getMonth(),days=s2.getDate()-s1.getDate();if(days<0){months-=1;let e=new Date(s2.getFullYear(),s2.getMonth(),0);days+=e.getDate()}months<0&&(years-=1,months+=12);let result=`${years}年${months}月${days}天`;document.getElementById("runningdays").innerHTML=result</script></body></html>

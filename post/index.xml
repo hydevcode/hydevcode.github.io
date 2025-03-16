@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Hydevcode</title><link>https://hydevcode.github.io/post/</link><description>Recent content in Posts on Hydevcode</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>Hydevcode All rights reserved. 禁止转载。如需引用，请注明文章链接。</copyright><lastBuildDate>Sat, 15 Mar 2025 19:20:00 +0800</lastBuildDate><atom:link href="https://hydevcode.github.io/post/index.xml" rel="self" type="application/rss+xml"/><item><title>Github Pull_request_target学习笔记</title><link>https://hydevcode.github.io/p/github-pull_request_target%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</link><pubDate>Sat, 15 Mar 2025 19:20:00 +0800</pubDate><guid>https://hydevcode.github.io/p/github-pull_request_target%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</guid><description>&lt;aside> 😀 由于需要在PR上用bot发送评论，所以可能需要用到pull_request_target,但是官方文档提示该触发条件有安全风险,于是研究下并做个笔记
+&lt;/aside>
+&lt;p>&lt;a class="link" href="https://docs.github.com/zh/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#pull_request_target" target="_blank" rel="noopener"
+>触发工作流的事件 - GitHub 文档&lt;/a>&lt;/p>
+&lt;p>在 GitHub Actions 中，&lt;code>pull_request&lt;/code> 和 &lt;code>pull_request_target&lt;/code> 是两种处理 Pull Request (PR) 的触发器,以下是我的理解介绍以及对比：&lt;/p>
+&lt;h1 id="-什么是pull_request">📝 什么是pull_request?
+&lt;/h1>&lt;ul>
+&lt;li>当 &lt;strong>PR 被创建&lt;/strong>、&lt;strong>更新&lt;/strong>（新提交）或 &lt;strong>重新打开&lt;/strong> 时触发工作流&lt;/li>
+&lt;li>专为 &lt;strong>处理 PR 贡献者的代码&lt;/strong> 设计&lt;/li>
+&lt;/ul>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>特性&lt;/th>
+&lt;th>说明&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;strong>代码环境&lt;/strong>&lt;/td>
+&lt;td>使用 &lt;strong>PR 分支的代码&lt;/strong>（即贡献者的代码）&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>权限&lt;/strong>&lt;/td>
+&lt;td>&lt;code>GITHUB_TOKEN&lt;/code> 默认只有 &lt;strong>读权限&lt;/strong>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>Secrets&lt;/strong>&lt;/td>
+&lt;td>&lt;strong>无法访问仓库的加密 secrets&lt;/strong>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>目标分支&lt;/strong>&lt;/td>
+&lt;td>无法直接访问目标分支（如 &lt;code>main&lt;/code>）的最新代码&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>使用示例：&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">on:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">#触发条件设置↓&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> pull_request:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> branches: &lt;span class="o">[&lt;/span> main &lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">permissions:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> contents: &lt;span class="nb">read&lt;/span> &lt;span class="c1"># 显式声明最低权限&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jobs:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> test:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> runs-on: ubuntu-latest
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> steps:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - uses: actions/checkout@v4 &lt;span class="c1"># 自动签出 PR 代码&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h1 id="-什么是pull_request_target">📝 什么是pull_request_target?
+&lt;/h1>&lt;ul>
+&lt;li>专门用于 &lt;strong>维护者审核 PR 时&lt;/strong> 需要 &lt;strong>高权限操作&lt;/strong> 的场景&lt;/li>
+&lt;/ul>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>特性&lt;/th>
+&lt;th>说明&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;strong>代码环境&lt;/strong>&lt;/td>
+&lt;td>默认使用 &lt;strong>目标分支的代码&lt;/strong>（如 &lt;code>main&lt;/code> 分支），而非 PR 代码&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>权限&lt;/strong>&lt;/td>
+&lt;td>&lt;code>GITHUB_TOKEN&lt;/code> 默认拥有 &lt;strong>写权限&lt;/strong>（可修改仓库）&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>Secrets&lt;/strong>&lt;/td>
+&lt;td>&lt;strong>可以访问仓库的加密 secrets&lt;/strong>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>目标分支&lt;/strong>&lt;/td>
+&lt;td>直接基于目标分支的最新代码运行&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h2 id="可能的安全风险">可能的安全风险
+&lt;/h2>&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/hydevcode/post/Git/Github_Pull_request_target%e5%ad%a6%e4%b9%a0%e7%ac%94%e8%ae%b0/images/Pasted%20image%2020250315192253.png" alt="" />&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>来自官方文档https://docs.github.com/zh/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#pull_request_target&lt;/p>
+&lt;p>对于由 &lt;code>pull_request_target&lt;/code> 事件触发的工作流，将授予 &lt;code>GITHUB_TOKEN&lt;/code> 读/写存储库权限，除非指定了 &lt;code>permissions&lt;/code>密钥并且工作流可以访问机密，即使从分支触发也是如此。 虽然工作流程在拉取请求的基础上下文中运行，但你应该确保不在此事件中检出、生成或运行来自拉取请求的不受信任代码。 此外，任何缓存都与基本分支共享相同的作用域。 为帮助防止缓存中毒，如果缓存内容可能已更改，则不应保存缓存。 有关详细信息，请参阅 GitHub Security Lab 网站上的“&lt;a class="link" href="https://securitylab.github.com/research/github-actions-preventing-pwn-requests" target="_blank" rel="noopener"
+>保护 GitHub Actions 和工作流安全：阻止 pwn 请求&lt;/a>”。&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="比如">比如：
+&lt;/h3>&lt;p>由于 &lt;code>pull_request_target&lt;/code> 默认使用的是 &lt;code>main&lt;/code> 分支的代码，因此无法测试 PR 中修改的内容。为了解决这个问题，可以指定使用 PR 分支的代码，但这又会引发新的问题。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">steps:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - uses: actions/checkout@v4
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> with:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ref: ${{ github.event.pull_request.head.sha }} # 显式签出 PR 代码
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>当前情况： • 工作流运行在高权限环境中（可访问敏感信息） • 但执行的是来自不可信 PR 的代码 • 触发的工作流仅在提交者的分叉仓库中运行 • 攻击者可能在 PR 代码中插入恶意 CI 脚本&lt;/p>
+&lt;p>安全风险主要源自于 &lt;code>pull_request_target&lt;/code> 下的工作流，因为该工作流具有读取 secrets 和写入 GITHUB_TOKEN 的权限。因此，在编写 YAML 文件时需要特别注意。&lt;/p>
+&lt;p>在网上搜索到的一些解决办法可以有效提高 GitHub Actions 的安全性，具体措施如下：&lt;/p>
+&lt;ol>
+&lt;li>&lt;strong>禁用凭证持久化 (persist-credentials: false)&lt;/strong>：当使用 &lt;code>actions/checkout&lt;/code> 动作时，默认情况下，GitHub 会将 GITHUB_TOKEN 写入本地的 Git 配置文件（存储在 &lt;code>.git/config&lt;/code> 中）。这意味着后续的所有 Git 操作（如 &lt;code>push&lt;/code> 或 &lt;code>pull&lt;/code>）都会自动使用这个令牌进行身份验证。然而，为了增强安全性并避免潜在的风险，可以通过设置 &lt;code>persist-credentials: false&lt;/code> 来主动删除这些凭证信息。这一步骤确保了即使代码库中存在敏感操作，也不会因为误用或泄露令牌而引发安全问题。&lt;/li>
+&lt;li>&lt;strong>最小化权限配置&lt;/strong>：在 GitHub Actions 的工作流文件中，可以使用 &lt;code>permissions&lt;/code> 块来显式声明每个步骤所需的权限。通过这种方式，可以确保每个作业只拥有完成任务所必需的最低权限。例如，如果某个作业只需要读取仓库内容，则不应授予其写入权限。这种做法不仅减少了不必要的权限暴露，还降低了因权限滥用而导致的安全风险。&lt;/li>
+&lt;li>&lt;strong>隔离敏感操作&lt;/strong>：为了进一步提升安全性，建议将签出代码的操作与任何涉及写入的操作分离到不同的作业（job）中。这样做可以有效防止在同一环境中同时执行读取和写入操作，从而减少意外修改或恶意攻击的可能性。通过将不同类型的任务分隔开，可以更好地控制和监控每个作业的行为，确保整个工作流的安全性和稳定性。&lt;/li>
+&lt;/ol>
+&lt;p>通过以上这些方法，不仅可以提高 GitHub Actions 的安全性，还能帮助开发者更清晰地管理和控制各个作业之间的权限和操作，从而构建更加健壮和可靠的自动化流程。&lt;/p>
+&lt;h1 id="workflow_run">WorkFlow_Run
+&lt;/h1>&lt;p>在官方的一篇文章中，官方提供了一种解决办法,而且给出的示例也刚好符合实现在PR发送评论的需求&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;a class="link" href="https://securitylab.github.com/resources/github-actions-preventing-pwn-requests/" target="_blank" rel="noopener"
+>https://securitylab.github.com/resources/github-actions-preventing-pwn-requests/&lt;/a>&lt;/p>
+&lt;p>与&lt;code>pull_request_target&lt;/code>一起，引入了一个新的触发器&lt;code>workflow_run&lt;/code>，以支持需要构建不受信任的代码并且还需要写入权限来更新 PR（例如代码覆盖率结果或其他测试结果）的方案。要以安全的方式执行此作，必须通过 &lt;code>pull_request&lt;/code> 触发器处理不受信任的代码，以便将其隔离在非特权环境中。然后，处理 PR 的工作流应将任何结果（如代码覆盖率或失败/通过的测试）存储在构件中并退出。然后，以下工作流程从 &lt;code>workflow_run&lt;/code> 开始，在该位置被授予对目标存储库的写入权限和对存储库密钥的访问权限，以便它可以下载项目并对存储库进行任何必要的修改，或与需要存储库密钥（例如 API 令牌）的第三方服务交互。&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>这里用的是官方的一个示例，其中分别有两个工作流，关键注意这两个工作流的触发事件一个是&lt;code>pull_request&lt;/code>一个是&lt;code>workflow_run&lt;/code>&lt;/p>
+&lt;p>当贡献者提交PR时，会触发相应的CI流程。由于&lt;code>Receive PR&lt;/code>工作流使用的是&lt;code>pull_request&lt;/code>事件，默认情况下无法访问机密信息且不具备写入权限。该工作流运行完毕后，会将处理结果及PR编号存储在构件中。随后，&lt;code>workflow_run&lt;/code>检测到&lt;code>Receive PR&lt;/code>工作流已结束，于是触发该工作流并开始执行其定义的任务。&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">name: Receive PR
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># read-only repo token&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># no access to secrets&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">on:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> pull_request:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jobs:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> build:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> runs-on: ubuntu-latest
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> steps:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - uses: actions/checkout@v2
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># imitation of a build process&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - name: Build
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> run: /bin/bash ./build.sh
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - name: Save PR number
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> run: &lt;span class="p">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> mkdir -p ./pr
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">echo&lt;/span> &lt;span class="si">${&lt;/span>&lt;span class="p">{ github.event.number &lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="o">}&lt;/span> &amp;gt; ./pr/NR
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - uses: actions/upload-artifact@v2
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> with:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> name: pr
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> path: pr/
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;code>Comment on the pull request&lt;/code>工作流将&lt;code>Receive PR&lt;/code>的构件下载回来，然后根据PR号对相应的PR发送评论&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;span class="lnt">42
+&lt;/span>&lt;span class="lnt">43
+&lt;/span>&lt;span class="lnt">44
+&lt;/span>&lt;span class="lnt">45
+&lt;/span>&lt;span class="lnt">46
+&lt;/span>&lt;span class="lnt">47
+&lt;/span>&lt;span class="lnt">48
+&lt;/span>&lt;span class="lnt">49
+&lt;/span>&lt;span class="lnt">50
+&lt;/span>&lt;span class="lnt">51
+&lt;/span>&lt;span class="lnt">52
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">name: Comment on the pull request
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># read-write repo token&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># access to secrets&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">on:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> workflow_run:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> workflows: &lt;span class="o">[&lt;/span>&lt;span class="s2">&amp;#34;Receive PR&amp;#34;&lt;/span>&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> types:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - completed
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">jobs:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> upload:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> runs-on: ubuntu-latest
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span>: &amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> github.event.workflow_run.event &lt;span class="o">==&lt;/span> &lt;span class="s1">&amp;#39;pull_request&amp;#39;&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> github.event.workflow_run.conclusion &lt;span class="o">==&lt;/span> &lt;span class="s1">&amp;#39;success&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> steps:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - name: &lt;span class="s1">&amp;#39;Download artifact&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> uses: actions/github-script@v3.1.0
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> with:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> script: &lt;span class="p">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> var &lt;span class="nv">artifacts&lt;/span> &lt;span class="o">=&lt;/span> await github.actions.listWorkflowRunArtifacts&lt;span class="o">({&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> owner: context.repo.owner,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> repo: context.repo.repo,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> run_id: &lt;span class="si">${&lt;/span>&lt;span class="p">{github.event.workflow_run.id &lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="o">}&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">})&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> var &lt;span class="nv">matchArtifact&lt;/span> &lt;span class="o">=&lt;/span> artifacts.data.artifacts.filter&lt;span class="o">((&lt;/span>artifact&lt;span class="o">)&lt;/span> &lt;span class="o">=&lt;/span>&amp;gt; &lt;span class="o">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> artifact.name &lt;span class="o">==&lt;/span> &lt;span class="s2">&amp;#34;pr&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">})[&lt;/span>0&lt;span class="o">]&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> var &lt;span class="nv">download&lt;/span> &lt;span class="o">=&lt;/span> await github.actions.downloadArtifact&lt;span class="o">({&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> owner: context.repo.owner,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> repo: context.repo.repo,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> artifact_id: matchArtifact.id,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> archive_format: &lt;span class="s1">&amp;#39;zip&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">})&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> var &lt;span class="nv">fs&lt;/span> &lt;span class="o">=&lt;/span> require&lt;span class="o">(&lt;/span>&lt;span class="s1">&amp;#39;fs&amp;#39;&lt;/span>&lt;span class="o">)&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> fs.writeFileSync&lt;span class="o">(&lt;/span>&lt;span class="s1">&amp;#39;${{github.workspace}}/pr.zip&amp;#39;&lt;/span>, Buffer.from&lt;span class="o">(&lt;/span>download.data&lt;span class="o">))&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - run: unzip pr.zip
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> - name: &lt;span class="s1">&amp;#39;Comment on PR&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> uses: actions/github-script@v3
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> with:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> github-token: &lt;span class="si">${&lt;/span>&lt;span class="p">{ secrets.GITHUB_TOKEN &lt;/span>&lt;span class="si">}&lt;/span>&lt;span class="o">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> script: &lt;span class="p">|&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> var &lt;span class="nv">fs&lt;/span> &lt;span class="o">=&lt;/span> require&lt;span class="o">(&lt;/span>&lt;span class="s1">&amp;#39;fs&amp;#39;&lt;/span>&lt;span class="o">)&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> var &lt;span class="nv">issue_number&lt;/span> &lt;span class="o">=&lt;/span> Number&lt;span class="o">(&lt;/span>fs.readFileSync&lt;span class="o">(&lt;/span>&lt;span class="s1">&amp;#39;./NR&amp;#39;&lt;/span>&lt;span class="o">))&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> await github.issues.createComment&lt;span class="o">({&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> owner: context.repo.owner,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> repo: context.repo.repo,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> issue_number: issue_number,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> body: &lt;span class="s1">&amp;#39;Everything is OK. Thank you for the PR!&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">})&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;aside> 💡
+&lt;p>有关题目或文章的问题，欢迎您在底部评论区留言，一起交流~&lt;/p>
+&lt;/aside></description></item><item><title>My First Post</title><link>https://hydevcode.github.io/p/my-first-post/</link><pubDate>Fri, 14 Mar 2025 21:13:57 +0800</pubDate><guid>https://hydevcode.github.io/p/my-first-post/</guid><description>&lt;p>这是第一篇文章，讲一讲该博客的情况&lt;/p>
+&lt;p>这个博客主要用于记录随笔笔记之类的，而整理好的文章会发到notion那边去&lt;/p></description></item></channel></rss>
